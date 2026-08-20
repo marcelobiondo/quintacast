@@ -2,7 +2,23 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "quintacast",
   "compatibility_date": "2026-08-20",
+  "main": "./worker/index.js",
+
   "assets": {
-    "directory": "./dist"
-  }
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/api/*",
+      "/feedback",
+      "/feedback/*",
+      "/mensagem",
+      "/mensagem/*"
+    ]
+  },
+
+//  "secrets": {
+//    "required": [
+//      "RESEND_API_KEY"
+//    ]
+//  }
 }

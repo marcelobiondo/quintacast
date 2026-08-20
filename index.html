@@ -3,11 +3,113 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="description"
+      content="QuintaCast — carros, DIY, retrofits, histórias e resenha de quem gosta de meter a mão na massa."
+    />
+
     <title>QuintaCast</title>
+
+    <script>
+      const savedTheme = localStorage.getItem("theme");
+      const prefersLight = window.matchMedia(
+        "(prefers-color-scheme: light)"
+      ).matches;
+
+      document.documentElement.dataset.theme =
+        savedTheme || (prefersLight ? "light" : "dark");
+    </script>
   </head>
 
   <body>
-    <h1>QuintaCast</h1>
-    <p>Quinta-feira é dia de postinho.</p>
+    <header class="site-header">
+      <div class="container header-content">
+        <a href="/" class="brand">QuintaCast</a>
+
+        <nav class="nav">
+          <a
+            href="https://open.spotify.com/show/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Spotify
+          </a>
+
+          <a href="#" aria-disabled="true">Apple Podcasts</a>
+          <a href="#" aria-disabled="true">YouTube</a>
+
+          <a
+            href="https://anchor.fm/s/11621a644/podcast/rss"
+            target="_blank"
+            rel="noreferrer"
+          >
+            RSS
+          </a>
+          <a href="/contato/">Fale com a gente</a>
+
+          <button
+            class="theme-toggle"
+            id="theme-toggle"
+            aria-label="Alternar tema"
+          >
+            ◐
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-content">
+          <p class="eyebrow">Podcast automotivo</p>
+
+          <h1>QuintaCast</h1>
+
+          <p class="tagline">
+            Quinta-feira é dia de postinho.
+          </p>
+
+          <p class="hero-description">
+            Três amigos que se conheceram através dos carros e compartilham
+            histórias sobre DIY, manutenção, modificações, retrofits,
+            projetos, eventos, acertos e cagadas.
+          </p>
+
+          <p class="hero-description">
+            Sem especialista. Sem guru. Só a visão de quem gosta de carro e
+            prefere meter a mão na massa.
+          </p>
+
+          <div class="hosts">
+            <span>Apresentação:</span>
+            Marcelo · Guido · Edu
+          </div>
+        </div>
+      </section>
+
+      <section class="episodes-section">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">QuintaCast</p>
+            <h2>Episódios recentes</h2>
+          </div>
+
+          <div id="episodes">
+            <p class="loading">Carregando episódios...</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <span>QuintaCast</span>
+        <span>Quinta-feira é dia de postinho.</span>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
   </body>
 </html>

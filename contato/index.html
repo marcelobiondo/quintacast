@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="description"
+      content="Fale com o QuintaCast. Mande histórias, sugestões de pauta, feedback ou só venha trocar ideia."
+    />
+
+    <title>Fale com a gente — QuintaCast</title>
+
+    <script>
+      const savedTheme = localStorage.getItem("theme");
+      const prefersLight = window.matchMedia(
+        "(prefers-color-scheme: light)"
+      ).matches;
+
+      document.documentElement.dataset.theme =
+        savedTheme || (prefersLight ? "light" : "dark");
+    </script>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="container header-content">
+        <a href="/" class="brand">QuintaCast</a>
+
+        <nav class="nav">
+          <a href="/">Episódios</a>
+          <a href="/contato/" class="active">Fale com a gente</a>
+
+          <button
+            class="theme-toggle"
+            id="theme-toggle"
+            aria-label="Alternar tema"
+          >
+            ◐
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="contact-page">
+        <div class="container contact-page-content">
+          <p class="eyebrow">Chega junto</p>
+
+          <h1>Fale com a gente.</h1>
+
+          <p class="contact-intro">
+            Tem uma história boa? Uma cagada memorável mexendo no carro?
+            Sugestão de pauta, feedback ou simplesmente quer trocar ideia?
+            Manda aí.
+          </p>
+
+          <form id="contact-form" class="contact-form">
+            <label>
+              Nome
+              <input
+                type="text"
+                name="name"
+                autocomplete="name"
+                required
+              />
+            </label>
+
+            <label>
+              E-mail
+              <input
+                type="email"
+                name="email"
+                autocomplete="email"
+                required
+              />
+            </label>
+
+            <label>
+              Mensagem
+              <textarea
+                name="message"
+                rows="7"
+                required
+              ></textarea>
+            </label>
+
+            <!-- Honeypot anti-spam -->
+            <div class="honeypot" aria-hidden="true">
+              <label>
+                Site
+                <input
+                  type="text"
+                  name="website"
+                  tabindex="-1"
+                  autocomplete="off"
+                />
+              </label>
+            </div>
+
+            <button type="submit" id="contact-submit">
+              Enviar mensagem
+            </button>
+
+            <p
+              id="contact-status"
+              class="contact-status"
+              role="status"
+            ></p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <span>QuintaCast</span>
+        <span>Quinta-feira é dia de postinho.</span>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/contact.js"></script>
+  </body>
+</html>
