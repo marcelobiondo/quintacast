@@ -1,12 +1,17 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
+
   "name": "quintacast",
+
   "compatibility_date": "2026-08-20",
+
   "main": "./worker/index.js",
 
   "assets": {
     "directory": "./dist",
+
     "binding": "ASSETS",
+
     "run_worker_first": [
       "/api/*",
       "/feedback",
@@ -16,9 +21,21 @@
     ]
   },
 
-//  "secrets": {
-//    "required": [
-//      "RESEND_API_KEY"
-//    ]
-//  }
+  "vars": {
+    "CONTACT_FROM_EMAIL": "QuintaCast <contato@quintacast.com.br>",
+
+    "CONTACT_TO_EMAIL": "marceloppps@gmail.com"
+  },
+
+  "env": {
+    "dev": {
+      "name": "quintacast-dev",
+
+      "vars": {
+        "CONTACT_FROM_EMAIL": "QuintaCast <contato@quintacast.com.br>",
+
+        "CONTACT_TO_EMAIL": "marceloppps@gmail.com"
+      }
+    }
+  }
 }
