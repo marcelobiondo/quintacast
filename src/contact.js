@@ -1,3 +1,5 @@
+import "./styles.css";
+
 const form = document.querySelector("#contact-form");
 const submitButton = document.querySelector("#contact-submit");
 const status = document.querySelector("#contact-status");
