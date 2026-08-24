@@ -502,3 +502,38 @@ textarea {
     gap: 4px;
   }
 }
+
+.podcast-platforms {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+
+  margin-top: 28px;
+}
+
+.podcast-platform {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 10px;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.podcast-platform:hover {
+  transform: translateY(-2px);
+}
+
+.podcast-platform img {
+  display: block;
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}

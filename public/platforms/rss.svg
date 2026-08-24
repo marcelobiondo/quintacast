@@ -1,0 +1,38 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  role="img"
+  aria-labelledby="rss-title"
+>
+  <title id="rss-title">RSS</title>
+
+  <circle
+    cx="12"
+    cy="12"
+    r="12"
+    fill="#F26522"
+  />
+
+  <circle
+    cx="7"
+    cy="17"
+    r="1.5"
+    fill="#FFFFFF"
+  />
+
+  <path
+    d="M5.5 10.5a8 8 0 0 1 8 8"
+    fill="none"
+    stroke="#FFFFFF"
+    stroke-width="2"
+    stroke-linecap="round"
+  />
+
+  <path
+    d="M5.5 6a12.5 12.5 0 0 1 12.5 12.5"
+    fill="none"
+    stroke="#FFFFFF"
+    stroke-width="2"
+    stroke-linecap="round"
+  />
+</svg>
