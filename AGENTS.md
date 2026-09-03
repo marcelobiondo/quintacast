@@ -160,6 +160,20 @@ When working from a GitHub Issue:
 - If the Issue is still an unrefined idea, do not invent major product decisions. Surface assumptions instead.
 - Prefer a small complete change over a broad partial rewrite.
 
+## Automated low-complexity agent
+
+The repository contains a dedicated workflow for human-approved low-complexity Issues:
+
+- workflow: `.github/workflows/codex-low-complexity.yml`;
+- agent policy: `.github/codex/LOW_COMPLEXITY_AGENT.md`;
+- execution branch: `agent/issue-<number>` created from `develop`;
+- output: draft Pull Request targeting `develop`;
+- human review is mandatory before merge or any later production promotion.
+
+This agent is an executor only. It must never target or modify `main`, deploy production, merge its own PR, enable auto-merge, access production secrets/configuration, or broaden the Issue beyond its approved scope.
+
+A manual workflow dispatch is the explicit human classification that the selected Issue is low complexity and safe for this execution path. Do not use this workflow for infrastructure, secrets, authentication, destructive data operations, broad architecture changes, ambiguous product decisions, or other high-impact work.
+
 ## Commits and PRs
 
 Use Conventional Commit-style messages when practical:
