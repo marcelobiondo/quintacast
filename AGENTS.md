@@ -160,19 +160,22 @@ When working from a GitHub Issue:
 - If the Issue is still an unrefined idea, do not invent major product decisions. Surface assumptions instead.
 - Prefer a small complete change over a broad partial rewrite.
 
-## Automated low-complexity agent
+## Manual low-complexity Codex flow
 
-The repository contains a dedicated workflow for human-approved low-complexity Issues:
+Use `.github/codex/LOW_COMPLEXITY_AGENT.md` when a person explicitly asks Codex, authenticated with their ChatGPT account, to implement a refined low-complexity Issue. This is a manual operating procedure, not a GitHub Actions workflow, and it does not require a repository `OPENAI_API_KEY`.
 
-- workflow: `.github/workflows/codex-low-complexity.yml`;
-- agent policy: `.github/codex/LOW_COMPLEXITY_AGENT.md`;
-- execution branch: `agent/issue-<number>` created from `develop`;
-- output: draft Pull Request targeting `develop`;
+Required flow:
+
+- a human confirms that the Issue is refined, has clear acceptance criteria, and is low complexity / low impact;
+- Codex reads `AGENTS.md`, the agent policy, and the complete Issue before changing code;
+- work starts from the current `develop` branch;
+- implementation happens on `agent/issue-<number>` or an equivalent scoped `fix/`, `feat/`, or `chore/` branch;
+- only the approved Issue scope is implemented;
+- `npm run build` must pass before completion;
+- the result is a draft Pull Request targeting `develop`;
 - human review is mandatory before merge or any later production promotion.
 
-This agent is an executor only. It must never target or modify `main`, deploy production, merge its own PR, enable auto-merge, access production secrets/configuration, or broaden the Issue beyond its approved scope.
-
-A manual workflow dispatch is the explicit human classification that the selected Issue is low complexity and safe for this execution path. Do not use this workflow for infrastructure, secrets, authentication, destructive data operations, broad architecture changes, ambiguous product decisions, or other high-impact work.
+Codex is an executor only. It must never target or modify `main`, deploy, merge its own PR, enable auto-merge, access production secrets/configuration, or broaden the Issue beyond its approved scope. If the Issue is ambiguous, high impact, or outside the eligibility rules in the agent policy, stop and report the blocker instead of implementing it.
 
 ## Commits and PRs
 
