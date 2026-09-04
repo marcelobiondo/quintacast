@@ -41,7 +41,7 @@ async function loadEpisodes() {
 
     items.forEach((item, index) => {
       episodesContainer.appendChild(
-        createEpisode(item, index)
+        createEpisode(item, index, items.length)
       );
     });
   } catch (error) {
@@ -55,7 +55,7 @@ async function loadEpisodes() {
   }
 }
 
-function createEpisode(item, index) {
+function createEpisode(item, index, episodeCount) {
   const title = getText(item, "title");
 
   const description =
@@ -72,7 +72,7 @@ function createEpisode(item, index) {
 
   const episodeNumber =
     getText(item, "itunes\\:episode") ||
-    String(index + 1);
+    String(episodeCount - index);
 
   const article = document.createElement("article");
 
