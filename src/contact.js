@@ -1,8 +1,11 @@
 import "./styles.css";
+import { initStickyHeader } from "./header.js";
 
 const form = document.querySelector("#contact-form");
 const submitButton = document.querySelector("#contact-submit");
 const status = document.querySelector("#contact-status");
+
+initStickyHeader();
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
