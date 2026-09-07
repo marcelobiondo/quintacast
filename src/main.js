@@ -1,7 +1,10 @@
 import "./styles.css";
+import { initStickyHeader } from "./header.js";
 
 const episodesContainer = document.querySelector("#episodes");
 const themeToggle = document.querySelector("#theme-toggle");
+
+initStickyHeader();
 
 themeToggle.addEventListener("click", () => {
   const current = document.documentElement.dataset.theme;
