@@ -77,6 +77,7 @@ async function loadEpisodes() {
     });
 
     updateDescriptionControls();
+    expandLatestEpisode();
   } catch (error) {
     console.error(error);
 
@@ -85,6 +86,15 @@ async function loadEpisodes() {
         Não conseguimos carregar os episódios agora.
       </p>
     `;
+  }
+}
+
+function expandLatestEpisode() {
+  const latestEpisode =
+    episodesContainer.querySelector(".episode");
+
+  if (latestEpisode) {
+    setEpisodeExpanded(latestEpisode, true);
   }
 }
 
