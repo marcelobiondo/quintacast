@@ -15,6 +15,11 @@
   --accent: #f21f2f;
   --accent-hover: #ff3342;
 
+  --header-glass: rgba(12, 23, 40, 0.86);
+  --header-glass-scrolled: rgba(12, 23, 40, 0.72);
+  --header-highlight: rgba(255, 255, 255, 0.08);
+  --header-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+
   /*
    * Largura-base de TODO o site.
    *
@@ -33,6 +38,11 @@
   --text-muted: #66717e;
 
   --border: #dedede;
+
+  --header-glass: rgba(255, 255, 255, 0.88);
+  --header-glass-scrolled: rgba(255, 255, 255, 0.74);
+  --header-highlight: rgba(255, 255, 255, 0.72);
+  --header-shadow: 0 12px 30px rgba(17, 25, 35, 0.08);
 }
 
 * {
@@ -80,17 +90,59 @@ textarea {
    ========================================================= */
 
 .site-header {
-  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  padding-top: 12px;
 }
 
 .header-content {
   min-height: 72px;
+
+  padding-inline: 20px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
   gap: 24px;
+
+  border: 1px solid var(--border);
+  border-radius: 18px;
+
+  background: var(--surface);
+  box-shadow: 0 0 0 1px var(--header-highlight) inset;
+
+  transition:
+    min-height 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .header-content {
+    background: var(--header-glass);
+    -webkit-backdrop-filter: blur(12px) saturate(135%);
+    backdrop-filter: blur(12px) saturate(135%);
+  }
+}
+
+.site-header.is-scrolled .header-content {
+  min-height: 60px;
+
+  background: var(--surface);
+  box-shadow:
+    0 0 0 1px var(--header-highlight) inset,
+    var(--header-shadow);
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .site-header.is-scrolled .header-content {
+    background: var(--header-glass-scrolled);
+    -webkit-backdrop-filter: blur(18px) saturate(145%);
+    backdrop-filter: blur(18px) saturate(145%);
+  }
 }
 
 .brand {
@@ -605,7 +657,11 @@ textarea {
     align-items: flex-start;
     flex-direction: column;
 
-    padding: 18px 0;
+    padding: 18px 16px;
+  }
+
+  .site-header.is-scrolled .header-content {
+    padding-block: 12px;
   }
 
   .nav {
@@ -648,5 +704,15 @@ textarea {
     justify-content: center;
 
     gap: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .header-content {
+    transition: none;
   }
 }
