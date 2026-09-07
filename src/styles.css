@@ -424,15 +424,61 @@ textarea {
 }
 
 .episode-description {
+  display: -webkit-box;
+
   max-width: 720px;
 
   margin: 20px 0;
 
+  overflow: hidden;
+
   color: var(--text-muted);
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
 }
 
 .episode-description p {
   margin: 0 0 12px;
+}
+
+.episode.is-expanded .episode-description {
+  display: block;
+
+  overflow: visible;
+
+  -webkit-line-clamp: initial;
+}
+
+.episode-description-toggle {
+  display: block;
+
+  margin: -8px 0 20px;
+  padding: 0;
+
+  color: var(--accent);
+  background: none;
+
+  border: 0;
+
+  cursor: pointer;
+
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.episode-description-toggle:hover {
+  color: var(--accent-hover);
+}
+
+.episode-description-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.episode-description-toggle[hidden] {
+  display: none;
 }
 
 .episode-hosts {

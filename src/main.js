@@ -3,8 +3,36 @@ import { initStickyHeader } from "./header.js";
 
 const episodesContainer = document.querySelector("#episodes");
 const themeToggle = document.querySelector("#theme-toggle");
+let descriptionResizeFrame;
 
 initStickyHeader();
+
+episodesContainer.addEventListener("click", (event) => {
+  const toggle = event.target.closest(
+    ".episode-description-toggle"
+  );
+
+  if (!toggle) return;
+
+  const episode = toggle.closest(".episode");
+  const shouldExpand = !episode.classList.contains(
+    "is-expanded"
+  );
+
+  collapseExpandedEpisode();
+
+  if (shouldExpand) {
+    setEpisodeExpanded(episode, true);
+  }
+});
+
+window.addEventListener("resize", () => {
+  cancelAnimationFrame(descriptionResizeFrame);
+
+  descriptionResizeFrame = requestAnimationFrame(
+    updateDescriptionControls
+  );
+});
 
 themeToggle.addEventListener("click", () => {
   const current = document.documentElement.dataset.theme;
@@ -47,6 +75,8 @@ async function loadEpisodes() {
         createEpisode(item, index, items.length)
       );
     });
+
+    updateDescriptionControls();
   } catch (error) {
     console.error(error);
 
@@ -109,6 +139,16 @@ function createEpisode(item, index, episodeCount) {
         ${sanitizeDescription(description)}
       </div>
 
+      <button
+        class="episode-description-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="episode-description-${index}"
+        hidden
+      >
+        Ver mais
+      </button>
+
       <div class="episode-hosts">
         Apresentação: Marcelo · Guido · Edu
       </div>
@@ -124,7 +164,63 @@ function createEpisode(item, index, episodeCount) {
     </div>
   `;
 
+  article
+    .querySelector(".episode-description")
+    .setAttribute("id", `episode-description-${index}`);
+
   return article;
+}
+
+function updateDescriptionControls() {
+  const episodes = [
+    ...episodesContainer.querySelectorAll(".episode")
+  ];
+
+  episodes.forEach((episode) => {
+    const description = episode.querySelector(
+      ".episode-description"
+    );
+    const toggle = episode.querySelector(
+      ".episode-description-toggle"
+    );
+
+    const wasExpanded = episode.classList.contains(
+      "is-expanded"
+    );
+
+    episode.classList.remove("is-expanded");
+
+    const hasOverflow =
+      description.scrollHeight > description.clientHeight + 1;
+
+    toggle.hidden = !hasOverflow;
+
+    if (hasOverflow && wasExpanded) {
+      setEpisodeExpanded(episode, true);
+    } else {
+      setEpisodeExpanded(episode, false);
+    }
+  });
+}
+
+function collapseExpandedEpisode() {
+  const expandedEpisode = episodesContainer.querySelector(
+    ".episode.is-expanded"
+  );
+
+  if (expandedEpisode) {
+    setEpisodeExpanded(expandedEpisode, false);
+  }
+}
+
+function setEpisodeExpanded(episode, isExpanded) {
+  const toggle = episode.querySelector(
+    ".episode-description-toggle"
+  );
+
+  episode.classList.toggle("is-expanded", isExpanded);
+  toggle.setAttribute("aria-expanded", String(isExpanded));
+  toggle.textContent = isExpanded ? "Ver menos" : "Ver mais";
 }
 
 function getText(parent, selector) {
