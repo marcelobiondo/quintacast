@@ -521,7 +521,7 @@ git --version
 
 # Desenvolvimento local
 
-## Frontend
+## Frontend isolado
 
 ```bash
 npm run dev
@@ -533,24 +533,37 @@ Normalmente disponível em:
 http://localhost:5173
 ```
 
-Esse modo é ideal para trabalhar apenas no frontend.
+Esse modo sobe apenas o Vite e é ideal para o desenvolvimento rápido do
+frontend. Os endpoints do Worker, como `/api/feed`, não ficam disponíveis
+localmente nesse fluxo.
 
 ---
 
-## Worker completo
+## Aplicação completa com Worker
 
-Para testar frontend + Worker:
+Para gerar o build do frontend e iniciar o Cloudflare Worker localmente:
 
 ```bash
 npm run build
 npx wrangler dev
 ```
 
-Normalmente disponível em:
+Como atalho equivalente, execute os dois comandos em sequência:
+
+```bash
+npm run build && npx wrangler dev
+```
+
+Esse fluxo serve os assets da aplicação e disponibiliza `/api/feed`, permitindo
+validar os cards com os episódios reais vindos do RSS.
+
+Abra a URL local informada pelo Wrangler — normalmente:
 
 ```text
 http://localhost:8787
 ```
+
+Nesse fluxo, não use a URL do Vite (`http://localhost:5173`).
 
 ---
 
