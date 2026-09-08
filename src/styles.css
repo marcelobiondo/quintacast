@@ -359,22 +359,30 @@ textarea {
 
 .episode {
   display: grid;
-
-  grid-template-columns: 90px 1fr;
-
+  grid-template-columns: 200px 1fr;
   gap: 32px;
-
   padding: 32px;
-
   background: var(--surface);
-
   border: 1px solid var(--border);
   border-radius: 14px;
-
   transition:
     background 0.2s ease,
     border-color 0.2s ease,
     transform 0.2s ease;
+}
+
+.episode-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.episode-artwork {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 .episode:hover {
@@ -732,17 +740,23 @@ textarea {
     max-width: 100%;
   }
 
-  .episode {
-    grid-template-columns: 1fr;
+.episode {
+  grid-template-columns: 1fr;
+  gap: 20px;
+  padding: 24px;
+}
 
-    gap: 10px;
+.episode-number {
+  font-size: 1rem;
+}
 
-    padding: 24px;
-  }
+.episode-side {
+  gap: 20px;
+}
 
-  .episode-number {
-    font-size: 1rem;
-  }
+.episode-artwork {
+  width: 100%;
+}
 
   .footer-content {
     flex-direction: column;
