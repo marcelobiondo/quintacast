@@ -703,28 +703,50 @@ textarea {
 
 @media (max-width: 700px) {
 
-  .container {
-    width: min(calc(100% - 28px), var(--max-width));
-  }
+.header-content {
+  min-height: 60px;
 
-  .header-content {
-    align-items: flex-start;
-    flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 
-    padding: 18px 16px;
-  }
+  gap: 12px;
 
-  .site-header.is-scrolled .header-content {
-    padding-block: 12px;
-  }
+  padding: 12px 14px;
+}
 
-  .nav {
-    width: 100%;
+.site-header.is-scrolled .header-content {
+  padding-block: 10px;
+}
 
-    overflow-x: auto;
+.brand {
+  flex-shrink: 0;
+  font-size: 1.1rem;
+}
 
-    padding-bottom: 4px;
-  }
+.nav {
+  width: auto;
+
+  flex-shrink: 0;
+
+  overflow: visible;
+
+  gap: 10px;
+
+  padding-bottom: 0;
+}
+
+.nav a {
+  font-size: 0.8rem;
+}
+
+.theme-toggle {
+  width: 34px;
+  height: 34px;
+
+  flex-shrink: 0;
+}
+
 
   .hero {
     padding: 70px 0 64px;
