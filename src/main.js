@@ -110,6 +110,11 @@ function createEpisode(item, index, episodeCount) {
   const duration =
     getText(item, "itunes\\:duration");
 
+const artworkUrl =
+  item
+    .getElementsByTagName("itunes:image")[0]
+    ?.getAttribute("href") || "";
+
   const audioUrl =
     item.querySelector("enclosure")?.getAttribute("url") || "#";
 
@@ -121,12 +126,25 @@ function createEpisode(item, index, episodeCount) {
 
   article.className = "episode";
 
-  article.innerHTML = `
+article.innerHTML = `
+  <div class="episode-side">
     <div class="episode-number">
       EP.${padNumber(episodeNumber)}
     </div>
 
-    <div>
+    ${
+      artworkUrl
+        ? `<img
+            class="episode-artwork"
+            src="${escapeHTML(artworkUrl)}"
+            alt="Capa do episódio ${escapeHTML(episodeNumber)}"
+            loading="lazy"
+          >`
+        : ""
+    }
+  </div>
+
+  <div>
       <div class="episode-header">
         <h3>${escapeHTML(title)}</h3>
       </div>
