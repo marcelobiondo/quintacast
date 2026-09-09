@@ -116,6 +116,7 @@ textarea {
 
   transition:
     min-height 0.2s ease,
+    width 0.2s ease,
     background 0.2s ease,
     box-shadow 0.2s ease;
 }
@@ -130,7 +131,7 @@ textarea {
 
 .site-header.is-scrolled .header-content {
   min-height: 60px;
-
+  width: calc(100% - 20px);
   background: var(--surface);
   box-shadow:
     0 0 0 1px var(--header-highlight) inset,
