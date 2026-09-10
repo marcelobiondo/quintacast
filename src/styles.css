@@ -799,3 +799,188 @@ textarea {
     transition: none;
   }
 }
+
+
+/* =========================================================
+   PERSON PAGE CSS
+   ========================================================= */
+
+.person-page {
+  padding: 72px 0 96px;
+}
+
+.person-hero {
+  max-width: 980px;
+}
+
+.person-role {
+  margin: 0 0 16px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.person-name {
+  margin: 0;
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.person-bio {
+  max-width: 760px;
+  margin: 32px 0 0;
+  font-size: 1.2rem;
+  line-height: 1.7;
+  opacity: 0.85;
+}
+
+.person-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.person-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.person-links a:hover {
+  transform: translateY(-2px);
+  background: var(--surface);
+}
+
+.person-project {
+  max-width: 980px;
+  margin-top: 96px;
+  padding-top: 48px;
+  border-top: 1px solid var(--border);
+}
+
+.person-project .eyebrow,
+.person-section-header .eyebrow {
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.55;
+}
+
+.person-project h2,
+.person-section-header h2 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: -0.03em;
+}
+
+.person-project > p:last-child {
+  max-width: 760px;
+  margin-top: 20px;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  opacity: 0.8;
+}
+
+.person-episodes {
+  max-width: 980px;
+  margin-top: 96px;
+  padding-top: 48px;
+  border-top: 1px solid var(--border);
+}
+
+.person-section-header {
+  margin-bottom: 36px;
+}
+
+.person-episode-list {
+  display: grid;
+  gap: 24px;
+}
+
+.person-episode {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 28px;
+  align-items: start;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface);
+}
+
+.person-episode-artwork {
+  display: block;
+  width: 200px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+.person-episode-content {
+  min-width: 0;
+}
+
+.person-episode-number {
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  opacity: 0.55;
+}
+
+.person-episode h3 {
+  margin: 0;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.person-episode .episode-meta {
+  margin-top: 14px;
+}
+
+.person-episode .listen-button {
+  margin-top: 24px;
+}
+
+@media (max-width: 700px) {
+  .person-page {
+    padding: 48px 0 72px;
+  }
+
+  .person-name {
+    font-size: clamp(3rem, 18vw, 4.5rem);
+  }
+
+  .person-bio {
+    font-size: 1.05rem;
+  }
+
+  .person-project,
+  .person-episodes {
+    margin-top: 64px;
+    padding-top: 36px;
+  }
+
+  .person-episode {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 18px;
+  }
+
+  .person-episode-artwork {
+    width: 100%;
+  }
+}

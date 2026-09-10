@@ -1,52 +1,90 @@
 import "./styles.css";
-import { initStickyHeader } from "./header.js";
 
-const form = document.querySelector("#contact-form");
-const submitButton = document.querySelector("#contact-submit");
-const status = document.querySelector("#contact-status");
+import { renderSiteHeader } from "./site-header.js";
+
+import {
+  initStickyHeader,
+  initThemeToggle
+} from "./header.js";
+
+const headerContainer =
+  document.querySelector("#site-header");
+
+headerContainer.insertAdjacentHTML(
+  "beforebegin",
+  renderSiteHeader({
+    active: "contact"
+  })
+);
+
+headerContainer.remove();
 
 initStickyHeader();
+initThemeToggle();
 
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
+const form =
+  document.querySelector("#contact-form");
 
-  submitButton.disabled = true;
-  submitButton.textContent = "Enviando...";
-  status.textContent = "";
+const submitButton =
+  document.querySelector("#contact-submit");
 
-  const formData = new FormData(form);
+const status =
+  document.querySelector("#contact-status");
 
-  const payload = {
-    name: formData.get("name"),
-    email: formData.get("email"),
-    message: formData.get("message"),
-    website: formData.get("website"),
-  };
+form.addEventListener(
+  "submit",
+  async (event) => {
+    event.preventDefault();
 
-  try {
-    const response = await fetch("/api/contact", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+    submitButton.disabled = true;
+    submitButton.textContent = "Enviando...";
+    status.textContent = "";
 
-    const data = await response.json();
+    const formData = new FormData(form);
 
-    if (!response.ok) {
-      throw new Error(data.error || "Não foi possível enviar a mensagem.");
+    const payload = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      message: formData.get("message"),
+      website: formData.get("website")
+    };
+
+    try {
+      const response = await fetch(
+        "/api/contact",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify(payload)
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error ||
+            "Não foi possível enviar a mensagem."
+        );
+      }
+
+      form.reset();
+
+      status.textContent =
+        "Mensagem enviada! Valeu por chegar junto. 🤘";
+    } catch (error) {
+      console.error(error);
+
+      status.textContent =
+        "Deu ruim no envio. Tenta novamente daqui a pouco.";
+    } finally {
+      submitButton.disabled = false;
+      submitButton.textContent =
+        "Enviar mensagem";
     }
-
-    form.reset();
-    status.textContent = "Mensagem enviada! Valeu por chegar junto. 🤘";
-  } catch (error) {
-    console.error(error);
-
-    status.textContent =
-      "Deu ruim no envio. Tenta novamente daqui a pouco.";
-  } finally {
-    submitButton.disabled = false;
-    submitButton.textContent = "Enviar mensagem";
   }
-});
+);

@@ -1,5 +1,8 @@
 import "./styles.css";
 import { initStickyHeader } from "./header.js";
+import { fetchEpisodes } from "./episodes.js";
+import { getPerson } from "./data/people.js";
+import { getEpisodePeople } from "./data/episode-people.js";
 
 const episodesContainer = document.querySelector("#episodes");
 const themeToggle = document.querySelector("#theme-toggle");
@@ -47,32 +50,13 @@ loadEpisodes();
 
 async function loadEpisodes() {
   try {
-    const response = await fetch("/api/feed");
-
-    if (!response.ok) {
-      throw new Error("Erro ao carregar feed.");
-    }
-
-    const xmlText = await response.text();
-
-    const parser = new DOMParser();
-
-    const xml = parser.parseFromString(
-      xmlText,
-      "application/xml"
-    );
-
-    const items = [...xml.querySelectorAll("item")];
-
-    if (!items.length) {
-      throw new Error("Nenhum episódio encontrado.");
-    }
+    const episodes = await fetchEpisodes();
 
     episodesContainer.innerHTML = "";
 
-    items.forEach((item, index) => {
+    episodes.forEach((episode, index) => {
       episodesContainer.appendChild(
-        createEpisode(item, index, items.length)
+        createEpisode(episode, index)
       );
     });
 
@@ -98,53 +82,65 @@ function expandLatestEpisode() {
   }
 }
 
-function createEpisode(item, index, episodeCount) {
-  const title = getText(item, "title");
+/* function createPeopleLinks(personIds) {
+  return personIds
+    .map((personId) => getPerson(personId))
+    .filter(Boolean)
+    .map(
+      (person) =>
+        `<a href="${person.profileUrl}">${escapeHTML(person.name)}</a>`
+    )
+    .join(" · ");
+} */
 
-  const description =
-    getText(item, "description") ||
-    getText(item, "content\\:encoded");
+function createPeopleLinks(personIds) {
+  return personIds
+    .map((personId) => getPerson(personId))
+    .filter(Boolean)
+    .map((person) => escapeHTML(person.name))
+    .join(" · ");
+}
 
-  const pubDate = getText(item, "pubDate");
+function createEpisode(episode, index) {
+const {
+  number: episodeNumber,
+  title,
+  description,
+  pubDate,
+  duration,
+  artworkUrl,
+  audioUrl
+} = episode;
 
-  const duration =
-    getText(item, "itunes\\:duration");
+const { hosts, guests } =
+  getEpisodePeople(episodeNumber);
 
-const artworkUrl =
-  item
-    .getElementsByTagName("itunes:image")[0]
-    ?.getAttribute("href") || "";
-
-  const audioUrl =
-    item.querySelector("enclosure")?.getAttribute("url") || "#";
-
-  const episodeNumber =
-    getText(item, "itunes\\:episode") ||
-    String(episodeCount - index);
+const hostLinks = createPeopleLinks(hosts);
+const guestLinks = createPeopleLinks(guests);
 
   const article = document.createElement("article");
 
   article.className = "episode";
 
-article.innerHTML = `
-  <div class="episode-side">
-    <div class="episode-number">
-      EP.${padNumber(episodeNumber)}
+  article.innerHTML = `
+    <div class="episode-side">
+      <div class="episode-number">
+        EP.${padNumber(episodeNumber)}
+      </div>
+
+      ${
+        artworkUrl
+          ? `<img
+              class="episode-artwork"
+              src="${escapeHTML(artworkUrl)}"
+              alt="Capa do episódio ${escapeHTML(episodeNumber)}"
+              loading="lazy"
+            >`
+          : ""
+      }
     </div>
 
-    ${
-      artworkUrl
-        ? `<img
-            class="episode-artwork"
-            src="${escapeHTML(artworkUrl)}"
-            alt="Capa do episódio ${escapeHTML(episodeNumber)}"
-            loading="lazy"
-          >`
-        : ""
-    }
-  </div>
-
-  <div>
+    <div>
       <div class="episode-header">
         <h3>${escapeHTML(title)}</h3>
       </div>
@@ -177,9 +173,19 @@ article.innerHTML = `
         Ver mais
       </button>
 
-      <div class="episode-hosts">
-        Apresentação: Marcelo · Guido · Edu
-      </div>
+<div class="episode-hosts">
+  ${
+    hostLinks
+      ? `Apresentação: ${hostLinks}`
+      : ""
+  }
+
+  ${
+    guestLinks
+      ? `<br>Convidados: ${guestLinks}`
+      : ""
+  }
+</div>
 
       <a
         class="listen-button"
@@ -249,12 +255,6 @@ function setEpisodeExpanded(episode, isExpanded) {
   episode.classList.toggle("is-expanded", isExpanded);
   toggle.setAttribute("aria-expanded", String(isExpanded));
   toggle.textContent = isExpanded ? "Ver menos" : "Ver mais";
-}
-
-function getText(parent, selector) {
-  return (
-    parent.querySelector(selector)?.textContent?.trim() || ""
-  );
 }
 
 function padNumber(number) {
