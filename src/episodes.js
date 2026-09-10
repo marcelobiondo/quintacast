@@ -35,7 +35,10 @@ function parseEpisode(item, index, episodeCount) {
   const pubDate = getText(item, "pubDate");
 
   const duration =
-    getText(item, "itunes\\:duration");
+    item
+      .getElementsByTagName("itunes:duration")[0]
+      ?.textContent
+      ?.trim() || "";
 
   const artworkUrl =
     item
