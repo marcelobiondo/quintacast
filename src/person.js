@@ -8,6 +8,7 @@ import {
   initStickyHeader,
   initThemeToggle
 } from "./header.js";
+import { createIcon } from "./icons.js";
 
 const app = document.querySelector("#app");
 
@@ -150,28 +151,39 @@ function createCompactEpisode(episode) {
         ${escapeHTML(episode.title)}
       </h3>
 
-      <div class="episode-meta">
-        ${
-          episode.pubDate
-            ? `<span>${formatDate(episode.pubDate)}</span>`
-            : ""
-        }
+<div class="episode-meta">
+  ${
+    episode.pubDate
+      ? `
+        <span class="meta-item">
+          ${createIcon("calendar")}
+          ${formatDate(episode.pubDate)}
+        </span>
+      `
+      : ""
+  }
 
-        ${
-          episode.duration
-            ? `<span>${escapeHTML(episode.duration)}</span>`
-            : ""
-        }
-      </div>
+  ${
+    episode.duration
+      ? `
+        <span class="meta-item">
+          ${createIcon("clock")}
+          ${escapeHTML(episode.duration)}
+        </span>
+      `
+      : ""
+  }
+</div>
 
-      <a
-        class="listen-button"
-        href="${escapeHTML(episode.audioUrl)}"
-        target="_blank"
-        rel="noreferrer"
-      >
-        ▶ Ouvir agora
-      </a>
+<a
+  class="listen-button"
+  href="${episode.link}"
+  target="_blank"
+  rel="noreferrer"
+>
+  ${createIcon("play")}
+  <span>Ouvir agora</span>
+</a>
     </div>
   `;
 

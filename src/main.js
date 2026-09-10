@@ -3,6 +3,7 @@ import { initStickyHeader } from "./header.js";
 import { fetchEpisodes } from "./episodes.js";
 import { getPerson } from "./data/people.js";
 import { getEpisodePeople } from "./data/episode-people.js";
+import { createIcon } from "./icons.js";
 
 const episodesContainer = document.querySelector("#episodes");
 const themeToggle = document.querySelector("#theme-toggle");
@@ -146,17 +147,25 @@ const guestLinks = createPeopleLinks(guests);
       </div>
 
       <div class="episode-meta">
-        ${
-          pubDate
-            ? `<span>${formatDate(pubDate)}</span>`
-            : ""
-        }
+        ${pubDate
+        ? `
+      <span class="meta-item">
+        ${createIcon("calendar")}
+        ${formatDate(pubDate)}
+      </span>
+    `
+    : ""
+}
 
-        ${
-          duration
-            ? `<span>${escapeHTML(duration)}</span>`
-            : ""
-        }
+${duration
+    ? `
+      <span class="meta-item">
+        ${createIcon("clock")}
+        ${escapeHTML(duration)}
+      </span>
+    `
+    : ""
+}
       </div>
 
       <div class="episode-description">
@@ -176,25 +185,36 @@ const guestLinks = createPeopleLinks(guests);
 <div class="episode-hosts">
   ${
     hostLinks
-      ? `Apresentação: ${hostLinks}`
+      ? `
+        <span class="host-item">
+          ${createIcon("mic")}
+          <span>Apresentação: ${hostLinks}</span>
+        </span>
+      `
       : ""
   }
 
   ${
     guestLinks
-      ? `<br>Convidados: ${guestLinks}`
+      ? `
+        <span class="host-item">
+          ${createIcon("mic")}
+          <span>Convidados: ${guestLinks}</span>
+        </span>
+      `
       : ""
   }
 </div>
 
       <a
-        class="listen-button"
-        href="${audioUrl}"
-        target="_blank"
-        rel="noreferrer"
-      >
-        ▶ Ouvir agora
-      </a>
+  class="listen-button"
+  href="${audioUrl}"
+  target="_blank"
+  rel="noreferrer"
+>
+  ${createIcon("play")}
+  <span>Ouvir agora</span>
+</a>
     </div>
   `;
 
