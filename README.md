@@ -4,15 +4,13 @@ Site oficial do **QuintaCast** — um podcast automotivo sobre DIY, manutenção
 
 > Quinta-feira é dia de postinho.
 
-Este repositório contém o site público, a integração com o feed RSS do podcast, a página de contato e o Worker que serve o frontend e executa as integrações de backend.
+Este repositório contém o site público, a integração com o feed RSS do podcast, páginas de participantes, página de contato e o Cloudflare Worker que serve o frontend e executa as integrações de backend.
 
 ---
 
 ## Visão geral
 
 O projeto foi pensado para ser simples de manter, barato de operar e fácil de evoluir.
-
-A arquitetura atual é:
 
 ```text
 Visitante
@@ -21,9 +19,8 @@ Visitante
 quintacast.com.br
    │
    ├── frontend estático (Vite)
-   │
+   ├── páginas de episódios e participantes
    ├── /api/feed ───────────────► RSS do podcast
-   │
    └── /api/contact
             │
             ▼
@@ -49,9 +46,7 @@ main    ──► PROD
 
 ## Frontend
 
-### HTML
-
-O site usa HTML simples, sem framework de UI.
+O site usa HTML, CSS e JavaScript sem framework de UI.
 
 Principais páginas:
 
@@ -61,6 +56,11 @@ Principais páginas:
 
 /contato/
 └── Fale com a gente
+
+/pessoas/marcelo/
+/pessoas/guido/
+/pessoas/edu/
+└── Perfis reutilizáveis de participantes
 ```
 
 Também existem aliases de contato:
@@ -70,56 +70,28 @@ Também existem aliases de contato:
 /mensagem
 ```
 
-Esses caminhos são redirecionados pelo Worker para:
+Esses caminhos são redirecionados pelo Worker para `/contato/`.
 
-```text
-/contato/
-```
+### CSS
 
----
+O CSS é responsável por layout, responsividade, light/dark mode, hero, cards de episódio, perfis, formulário, navegação e estados visuais. Não há framework CSS.
 
-## CSS
-
-O CSS do projeto é responsável por:
-
-- layout;
-- responsividade;
-- dark mode / light mode;
-- hero;
-- cards dos episódios;
-- formulário;
-- navegação;
-- ícones dos agregadores.
-
-Não há framework CSS.
-
----
-
-## JavaScript
+### JavaScript
 
 O JavaScript do frontend é usado principalmente para:
 
-- buscar e renderizar episódios;
-- alternar tema claro/escuro;
-- persistir a preferência de tema;
+- buscar e normalizar episódios do RSS;
+- renderizar cards da Home;
+- renderizar perfis e episódios relacionados;
+- relacionar episódios e participantes;
+- reutilizar navbar interna e comportamento sticky;
+- alternar e persistir tema;
 - enviar o formulário de contato;
 - consumir os endpoints do Worker.
 
----
+### Vite
 
-## Vite
-
-O [Vite](https://vite.dev/) é usado para desenvolvimento e build.
-
-Ele fornece:
-
-- servidor local;
-- hot reload;
-- build otimizado;
-- processamento dos assets;
-- geração da pasta `dist/`.
-
-Comandos principais:
+O [Vite](https://vite.dev/) fornece servidor local, hot reload, build e geração de `dist/`.
 
 ```bash
 npm run dev
@@ -129,30 +101,62 @@ npm run preview
 
 ---
 
+# Episódios e participantes
+
+O RSS continua sendo a fonte principal dos episódios. O frontend usa uma camada compartilhada para parsing e normalização em `src/episodes.js`.
+
+A relação entre episódio e participantes é enriquecida localmente no repositório, sem CMS, através de dados versionados em `src/data/`.
+
+Essa abordagem mantém o fluxo editorial simples e evita duplicar o cadastro de episódios, enquanto permite criar perfis e relacionamentos que o RSS atual não entrega de forma suficiente para o site.
+
+As páginas de participantes usam uma estrutura reutilizável em vez de páginas independentes com markup duplicado.
+
+---
+
+# Iconografia
+
+A interface usa **Lucide** como biblioteca padrão de ícones funcionais.
+
+A dependência é instalada via npm, sem CDN em runtime. Os ícones ficam centralizados em:
+
+```text
+src/icons.js
+```
+
+Stack inicial:
+
+- `Calendar` — data de publicação;
+- `Clock` — duração do episódio;
+- `Mic` — apresentação/participantes;
+- `Play` — ação “Ouvir agora”.
+
+A documentação completa de uso, expansão, acessibilidade e ajustes ópticos está em:
+
+```text
+docs/ICONS.md
+```
+
+Antes de adicionar SVG avulso, emoji funcional ou outra biblioteca de ícones, consulte essa documentação e reutilize a stack existente sempre que possível.
+
+Os ícones dos agregadores continuam como assets próprios em:
+
+```text
+public/platforms/
+```
+
+---
+
 # Cloudflare
 
-O projeto usa Cloudflare para:
+O projeto usa Cloudflare para DNS, SSL, domínio, Workers, assets estáticos, ambientes DEV/PROD, secrets e deploy integrado ao GitHub.
 
-- DNS;
-- SSL;
-- domínio;
-- Cloudflare Workers;
-- assets estáticos;
-- ambientes DEV e PROD;
-- secrets;
-- deploy integrado ao GitHub.
-
-A configuração principal fica em:
+Configuração principal:
 
 ```text
 wrangler.jsonc
 ```
 
----
-
 ## Cloudflare Worker
-
-O Worker funciona como backend e também serve o build do frontend.
 
 Arquivo:
 
@@ -160,7 +164,7 @@ Arquivo:
 worker/index.js
 ```
 
-Principais responsabilidades:
+Responsabilidades atuais:
 
 ```text
 /api/feed
@@ -182,119 +186,17 @@ e o entrega ao frontend.
 
 ### `/api/contact`
 
-Recebe os dados do formulário:
-
-```json
-{
-  "name": "Nome",
-  "email": "email@exemplo.com",
-  "message": "Mensagem",
-  "website": ""
-}
-```
-
-O campo `website` é um honeypot anti-spam.
-
-O Worker:
-
-1. valida os dados;
-2. verifica o honeypot;
-3. limita o tamanho dos campos;
-4. chama a API do Resend;
-5. devolve o status para o frontend.
-
----
-
-# Resend
-
-O [Resend](https://resend.com/) é responsável pela entrega dos e-mails enviados pelo formulário.
-
-Fluxo:
-
-```text
-Formulário
-   │
-   ▼
-POST /api/contact
-   │
-   ▼
-Cloudflare Worker
-   │
-   ▼
-Resend
-   │
-   ▼
-E-mail do QuintaCast
-```
-
-O endereço informado pelo visitante é usado como `reply_to`.
-
-Assim, quando a mensagem chega e alguém clica em **Responder**, a resposta vai diretamente para quem enviou o formulário.
+Recebe os dados do formulário, valida campos, verifica honeypot, aplica limites, chama o Resend e devolve o status ao frontend.
 
 A API key do Resend é um secret e **nunca deve ser versionada**.
 
 ---
 
-# RSS
-
-O podcast é distribuído via RSS.
-
-Feed original:
-
-```text
-https://anchor.fm/s/11621a644/podcast/rss
-```
-
-O site consome:
-
-```text
-/api/feed
-```
-
-Isso mantém a integração centralizada no Worker.
-
----
-
-# Agregadores
-
-Atualmente o QuintaCast está disponível em:
-
-- Spotify;
-- Apple Podcasts;
-- Overcast;
-- YouTube Music;
-- Amazon Music;
-- Castbox;
-- RSS.
-
-Os ícones utilizados no site ficam em:
-
-```text
-public/platforms/
-```
-
----
-
 # Tema claro e escuro
 
-O site suporta:
+O site suporta `dark` e `light`.
 
-```text
-dark
-light
-```
-
-Na primeira visita, o tema segue:
-
-```text
-prefers-color-scheme
-```
-
-Quando o usuário altera o tema manualmente, a escolha é persistida usando:
-
-```text
-localStorage
-```
+Na primeira visita, segue `prefers-color-scheme`. Quando o usuário altera manualmente, a preferência é persistida em `localStorage`.
 
 ---
 
@@ -306,19 +208,29 @@ Estrutura resumida:
 quintacast/
 ├── contato/
 │   └── index.html
-│
+├── pessoas/
+│   ├── marcelo/
+│   ├── guido/
+│   └── edu/
+├── docs/
+│   └── ICONS.md
 ├── public/
 │   ├── brand/
 │   └── platforms/
-│
 ├── src/
+│   ├── data/
+│   │   ├── episode-people.js
+│   │   └── people.js
 │   ├── contact.js
+│   ├── episodes.js
+│   ├── header.js
+│   ├── icons.js
 │   ├── main.js
+│   ├── person.js
+│   ├── site-header.js
 │   └── styles.css
-│
 ├── worker/
 │   └── index.js
-│
 ├── index.html
 ├── install.sh
 ├── package.json
@@ -328,13 +240,7 @@ quintacast/
 └── README.md
 ```
 
-A pasta:
-
-```text
-dist/
-```
-
-é gerada pelo Vite e não deve ser editada manualmente.
+A pasta `dist/` é gerada pelo Vite e não deve ser editada manualmente.
 
 ---
 
@@ -342,63 +248,36 @@ dist/
 
 ## DEV
 
-Branch:
-
 ```text
-develop
-```
-
-Worker:
-
-```text
-quintacast-dev
-```
-
-Domínio:
-
-```text
+branch: develop
+worker: quintacast-dev
 https://dev.quintacast.com.br
 ```
 
-O ambiente DEV é usado para testar alterações antes da produção.
-
----
+É o ambiente de integração e validação antes de produção.
 
 ## PROD
 
-Branch:
-
 ```text
-main
-```
-
-Worker:
-
-```text
-quintacast
-```
-
-Domínio:
-
-```text
+branch: main
+worker: quintacast
 https://quintacast.com.br
 ```
 
-A branch `main` deve receber apenas versões já validadas.
+A `main` recebe apenas mudanças já validadas.
 
 ---
 
 # Fluxo de desenvolvimento
 
-Evite trabalhar diretamente em `main`.
+Evite trabalhar diretamente em `develop` ou `main`.
 
-Exemplo de nova feature:
+Nova feature:
 
 ```bash
-git checkout develop
+git switch develop
 git pull origin develop
-
-git checkout -b feat/minha-feature
+git switch -c feat/minha-feature
 ```
 
 Depois das alterações:
@@ -406,92 +285,65 @@ Depois das alterações:
 ```bash
 git add .
 git commit -m "feat: descrição da alteração"
+git push -u origin feat/minha-feature
 ```
 
-Para integrar em DEV:
-
-```bash
-git checkout develop
-git merge feat/minha-feature
-git push origin develop
-```
-
-Valide em:
+Fluxo esperado:
 
 ```text
-https://dev.quintacast.com.br
+feature branch
+     ↓
+PR para develop
+     ↓
+DEV
+     ↓
+validação
+     ↓
+PR develop → main
+     ↓
+PROD
 ```
 
-Depois de aprovado:
-
-```bash
-git checkout main
-git pull origin main
-git merge develop
-git push origin main
-```
-
-Isso publica a versão em produção.
+Mudanças de produto/UX devem ser validadas em DEV antes da promoção. Correções exclusivamente documentais podem ser integradas sem nova rodada visual quando não alterarem o produto publicado.
 
 ---
 
 # Preparando uma nova máquina
 
-O projeto inclui:
+O projeto inclui `install.sh`, que prepara automaticamente o ambiente de desenvolvimento.
 
-```text
-install.sh
-```
+Suporte pensado para:
 
-Ele prepara automaticamente o ambiente de desenvolvimento.
-
-É útil ao configurar:
-
-- outro Mac;
-- Linux;
-- Ubuntu;
+- macOS;
+- Linux / Ubuntu;
 - WSL2;
 - Windows com Git Bash.
 
----
-
 ## Instalação rápida
-
-Clone o repositório:
 
 ```bash
 git clone https://github.com/marcelobiondo/quintacast.git
 cd quintacast
-```
-
-Dê permissão ao instalador:
-
-```bash
 chmod +x install.sh
-```
-
-Execute:
-
-```bash
 ./install.sh
 ```
 
-No Windows, execute pelo **Git Bash** ou **WSL2**.
+No Windows, execute pelo Git Bash ou WSL2.
 
----
-
-# O que o `install.sh` faz
+## O que o `install.sh` faz
 
 O script:
 
 1. detecta o sistema operacional;
 2. verifica Git, Curl, Node e npm;
 3. instala Node.js quando necessário;
-4. instala as dependências com `npm ci`;
+4. instala todas as dependências declaradas no projeto com `npm ci`;
 5. valida Vite;
 6. valida Wrangler;
 7. executa `npm run build`;
 8. informa os próximos passos.
+
+Isso significa que novas dependências npm, como Lucide, são automaticamente instaladas em uma máquina nova sem exigir lógica específica no bootstrap.
 
 O script **não cria nem grava secrets automaticamente**.
 
@@ -499,15 +351,11 @@ O script **não cria nem grava secrets automaticamente**.
 
 # Requisitos
 
-Recomendado:
-
 ```text
 Node.js 24+
 npm 10+
 Git
 ```
-
-As dependências de Vite e Wrangler são instaladas pelo próprio projeto.
 
 Confira:
 
@@ -527,45 +375,34 @@ git --version
 npm run dev
 ```
 
-Normalmente disponível em:
+Normalmente em:
 
 ```text
 http://localhost:5173
 ```
 
-Esse modo sobe apenas o Vite e é ideal para o desenvolvimento rápido do
-frontend. Os endpoints do Worker, como `/api/feed`, não ficam disponíveis
-localmente nesse fluxo.
-
----
+Esse modo sobe apenas o Vite. Endpoints do Worker, como `/api/feed`, não ficam disponíveis localmente nesse fluxo.
 
 ## Aplicação completa com Worker
-
-Para gerar o build do frontend e iniciar o Cloudflare Worker localmente:
 
 ```bash
 npm run build
 npx wrangler dev
 ```
 
-Como atalho equivalente, execute os dois comandos em sequência:
+ou:
 
 ```bash
 npm run build && npx wrangler dev
 ```
 
-Esse fluxo serve os assets da aplicação e disponibiliza `/api/feed`, permitindo
-validar os cards com os episódios reais vindos do RSS.
-
-Abra a URL local informada pelo Wrangler — normalmente:
+Abra a URL informada pelo Wrangler, normalmente:
 
 ```text
 http://localhost:8787
 ```
 
-Nesse fluxo, não use a URL do Vite (`http://localhost:5173`).
-
----
+Esse é o fluxo recomendado para validar episódios reais vindos do RSS.
 
 ## Worker DEV
 
@@ -582,76 +419,39 @@ Secrets nunca devem ir para o GitHub.
 
 ## Resend
 
-### DEV
+DEV:
 
 ```bash
 npx wrangler secret put RESEND_API_KEY --env dev
 ```
 
-### PROD
+PROD:
 
 ```bash
 npx wrangler secret put RESEND_API_KEY
 ```
 
----
+## Secrets locais
 
-# Secrets locais
-
-Para testar integrações localmente, crie na raiz:
-
-```text
-.dev.vars
-```
-
-Exemplo:
+Para testar integrações localmente, crie `.dev.vars` na raiz:
 
 ```text
 RESEND_API_KEY="re_xxxxxxxxxxxxxxxxx"
 ```
 
-Garanta que `.dev.vars` esteja no `.gitignore`.
+Garanta que `.dev.vars` esteja no `.gitignore` e nunca faça commit desse arquivo.
 
-Nunca faça commit desse arquivo.
-
----
-
-# Variáveis não sensíveis
-
-Configurações como:
-
-```text
-CONTACT_FROM_EMAIL
-CONTACT_TO_EMAIL
-```
-
-podem ficar no `wrangler.jsonc`.
-
-Credenciais como:
-
-```text
-RESEND_API_KEY
-```
-
-não podem.
+Configurações não sensíveis, como `CONTACT_FROM_EMAIL` e `CONTACT_TO_EMAIL`, podem ficar no `wrangler.jsonc`.
 
 ---
 
-# Login no Cloudflare
+# Login e deploy manual
 
-Em uma máquina nova, para deploy manual ou administração de secrets:
+Autenticação:
 
 ```bash
 npx wrangler login
 ```
-
-Isso abrirá o navegador para autenticação.
-
----
-
-# Deploy manual
-
-O fluxo principal de deploy está conectado ao GitHub, mas também é possível publicar manualmente.
 
 DEV:
 
@@ -667,23 +467,19 @@ npm run build
 npx wrangler deploy
 ```
 
-Use deploy manual apenas quando necessário.
+O fluxo principal de deploy continua conectado ao GitHub; deploy manual é exceção.
 
 ---
 
 # Build
 
-Para validar o projeto antes de um push:
+Antes de um push relevante:
 
 ```bash
 npm run build
 ```
 
-O resultado deve ser gerado em:
-
-```text
-dist/
-```
+O resultado deve ser gerado em `dist/`.
 
 ---
 
@@ -697,15 +493,25 @@ O projeto atualmente inclui:
 - limites de tamanho;
 - sanitização do HTML do e-mail;
 - endpoint de contato aceitando apenas `POST`;
-- API key armazenada no Cloudflare.
+- API key armazenada no Cloudflare;
+- separação DEV/PROD.
+
+---
+
+# Documentação técnica
+
+Documentos especializados devem complementar o README sem duplicá-lo.
+
+- [`docs/ICONS.md`](docs/ICONS.md) — iconografia, arquitetura, acessibilidade e expansão da biblioteca de ícones.
+- [`AGENTS.md`](AGENTS.md) — regras e contexto para agentes que colaboram no repositório, quando aplicável.
+
+O README funciona como mapa geral do produto e da operação; detalhes específicos devem ficar em documentos próprios.
 
 ---
 
 # Princípios do projeto
 
-A infraestrutura foi mantida intencionalmente enxuta.
-
-A lógica é:
+A infraestrutura é mantida intencionalmente proporcional ao problema.
 
 ```text
 entregar
@@ -717,7 +523,7 @@ aprender
 evoluir
 ```
 
-O objetivo é evitar complexidade antes dela ser necessária.
+O objetivo é evitar complexidade antes dela ser necessária, sem tornar o próximo passo caro.
 
 ---
 
