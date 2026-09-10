@@ -2,7 +2,10 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
 
     <meta
       name="description"
@@ -13,6 +16,7 @@
 
     <script>
       const savedTheme = localStorage.getItem("theme");
+
       const prefersLight = window.matchMedia(
         "(prefers-color-scheme: light)"
       ).matches;
@@ -23,24 +27,7 @@
   </head>
 
   <body>
-    <header class="site-header">
-      <div class="container header-content">
-        <a href="/" class="brand">QuintaCast</a>
-
-        <nav class="nav">
-          <a href="/">Episódios</a>
-          <a href="/contato/" class="active">Fale com a gente</a>
-
-          <button
-            class="theme-toggle"
-            id="theme-toggle"
-            aria-label="Alternar tema"
-          >
-            ◐
-          </button>
-        </nav>
-      </div>
-    </header>
+    <div id="site-header"></div>
 
     <main>
       <section class="contact-page">
@@ -58,6 +45,7 @@
           <form id="contact-form" class="contact-form">
             <label>
               Nome
+
               <input
                 type="text"
                 name="name"
@@ -68,6 +56,7 @@
 
             <label>
               E-mail
+
               <input
                 type="email"
                 name="email"
@@ -78,6 +67,7 @@
 
             <label>
               Mensagem
+
               <textarea
                 name="message"
                 rows="7"
@@ -86,9 +76,13 @@
             </label>
 
             <!-- Honeypot anti-spam -->
-            <div class="honeypot" aria-hidden="true">
+            <div
+              class="honeypot"
+              aria-hidden="true"
+            >
               <label>
                 Site
+
                 <input
                   type="text"
                   name="website"
@@ -98,7 +92,10 @@
               </label>
             </div>
 
-            <button type="submit" id="contact-submit">
+            <button
+              type="submit"
+              id="contact-submit"
+            >
               Enviar mensagem
             </button>
 
@@ -119,6 +116,9 @@
       </div>
     </footer>
 
-    <script type="module" src="/src/contact.js"></script>
+    <script
+      type="module"
+      src="/src/contact.js"
+    ></script>
   </body>
 </html>

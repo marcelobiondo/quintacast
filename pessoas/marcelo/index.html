@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <meta
+      name="description"
+      content="Marcelo — apresentador do QuintaCast."
+    />
+    <title>Marcelo — QuintaCast</title>
+    <script>
+  const savedTheme = localStorage.getItem("theme");
+
+  const prefersLight = window.matchMedia(
+    "(prefers-color-scheme: light)"
+  ).matches;
+
+  document.documentElement.dataset.theme =
+    savedTheme || (prefersLight ? "light" : "dark");
+</script>
+  </head>
+
+  <body data-person="marcelo">
+    <div id="app"></div>
+
+    <script
+      type="module"
+      src="/src/person.js"
+    ></script>
+  </body>
+</html>
