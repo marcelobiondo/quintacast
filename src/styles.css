@@ -515,6 +515,10 @@ textarea {
   color: var(--accent-hover);
 }
 
+.listen-button svg {
+  transform: translateY(-1px);
+}
+
 /* =========================================================
    CONTACT
    ========================================================= */
@@ -983,4 +987,30 @@ textarea {
   .person-episode-artwork {
     width: 100%;
   }
+}
+
+.meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.meta-item svg {
+  flex-shrink: 0;
+}
+
+.host-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.host-item + .host-item {
+  margin-top: 6px;
+}
+
+.listen-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
