@@ -1,17 +1,49 @@
 import "./styles.css";
-import { initStickyHeader } from "./header.js";
+import {
+  initAnalytics,
+  trackEvent
+} from "./analytics.js";import { initStickyHeader } from "./header.js";
 import { fetchEpisodes } from "./episodes.js";
 import { getPerson } from "./data/people.js";
 import { getEpisodePeople } from "./data/episode-people.js";
 import { createIcon } from "./icons.js";
 
+initAnalytics();
+
 const episodesContainer = document.querySelector("#episodes");
+const podcastPlatforms =
+  document.querySelector(".podcast-platforms");
 const themeToggle = document.querySelector("#theme-toggle");
 let descriptionResizeFrame;
 
 initStickyHeader();
 
+podcastPlatforms?.addEventListener("click", (event) => {
+  const platform = event.target.closest(
+    ".podcast-platform"
+  );
+
+  if (!platform) return;
+
+  trackEvent("outbound_aggregator_click", {
+    aggregator: platform.dataset.aggregator || ""
+  });
+});
+
 episodesContainer.addEventListener("click", (event) => {
+  const listenButton = event.target.closest(
+    ".listen-button"
+  );
+
+  if (listenButton) {
+    const episode = listenButton.closest(".episode");
+
+    trackEvent("listen_episode_click", {
+      episode_number:
+        episode?.dataset.episodeNumber || ""
+    });
+  }
+
   const toggle = event.target.closest(
     ".episode-description-toggle"
   );
@@ -122,6 +154,7 @@ const guestLinks = createPeopleLinks(guests);
   const article = document.createElement("article");
 
   article.className = "episode";
+  article.dataset.episodeNumber = episodeNumber;
 
   article.innerHTML = `
     <div class="episode-side">

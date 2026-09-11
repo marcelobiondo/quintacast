@@ -1,5 +1,5 @@
 import "./styles.css";
-
+import { initAnalytics } from "./analytics.js";
 import { getPerson } from "./data/people.js";
 import { episodeHasPerson } from "./data/episode-people.js";
 import { fetchEpisodes } from "./episodes.js";
@@ -9,6 +9,8 @@ import {
   initThemeToggle
 } from "./header.js";
 import { createIcon } from "./icons.js";
+
+initAnalytics();
 
 const app = document.querySelector("#app");
 

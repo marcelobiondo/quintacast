@@ -1,11 +1,17 @@
 import "./styles.css";
-
+import {
+  initAnalytics,
+  trackEvent
+} from "./analytics.js";
 import { renderSiteHeader } from "./site-header.js";
 
 import {
   initStickyHeader,
   initThemeToggle
 } from "./header.js";
+
+initAnalytics();
+trackEvent("contact_view");
 
 const headerContainer =
   document.querySelector("#site-header");
@@ -65,17 +71,19 @@ form.addEventListener(
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(
-          data.error ||
-            "Não foi possível enviar a mensagem."
-        );
-      }
+if (!response.ok) {
+  throw new Error(
+    data.error ||
+      "Não foi possível enviar a mensagem."
+  );
+}
 
-      form.reset();
+trackEvent("contact_submit_success");
 
-      status.textContent =
-        "Mensagem enviada! Valeu por chegar junto. 🤘";
+form.reset();
+
+status.textContent =
+  "Mensagem enviada! Valeu por chegar junto. 🤘";
     } catch (error) {
       console.error(error);
 
