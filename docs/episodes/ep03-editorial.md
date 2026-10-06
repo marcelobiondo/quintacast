@@ -24,7 +24,7 @@ O Marcelo entra na conversa com sua humilde contribuição: uma suspensão a ar 
 
 No caminho ainda aparecem preparação, remap, combustível, peças “iguais” que não são exatamente iguais, upgrades, consumo e aquela eterna tentativa de descobrir **por que diabos o carro do amigo funciona e o seu resolveu desenvolver personalidade própria.**
 
-E antes de entrar de vez na receita de bolo, fica o convite: no dia **11 de outubro**, a galera do **Polo MK6 Club** estará em **Mairiporã** para o **27º encontro do clube**, dentro do **10º Encontro de Fuscas e Antigos da cidade**. O evento acontece **das 8h às 16h, na Avenida Boulevard**, e é beneficente; para expor o carro, a orientação citada no episódio é levar **2 kg de alimento**.
+E antes de entrar de vez na receita de bolo, fica o convite: no dia **11 de outubro**, a galera do **Polo MK6 Club** estará em **Mairiporã** para o **27º encontro do clube**, dentro do **10º Encontro de Fuscas e Antigos da cidade**. O evento acontece **das 8h às 16h, na Avenida Boulevard**, e é beneficente; para expor o carro, é necessário levar **2 kg de alimento** não perecível.
 
 Receita de bolo existe? Existe.
 
