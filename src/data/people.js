@@ -31,22 +31,22 @@ export const people = {
     role: "Apresentador",
     profileUrl: "/pessoas/guido/",
 
-    bio: "Entusiasta de carros, projetos e boas ideias que às vezes dão certo. No QuintaCast, participa das conversas sobre modificações, experiências, decisões duvidosas e tudo aquilo que rende história depois.",
+    bio: "Entusiasta de carros, preparação e tudo que envolve o universo automotivo. Por trás do @blu_gts_br, compartilha experiências, projetos, modificações e aprendizados de quem gosta de entender o que existe por trás de cada detalhe. No QuintaCast, leva para a conversa histórias reais, opiniões, experiências e aquelas discussões automotivas que começam falando de carro e terminam virando história.",
 
     car: {
-      name: "Projeto do Guido",
+      name: "Blu GTS",
       description:
-        "Espaço reservado para o projeto automotivo do Guido, com contexto, modificações, histórias e tudo aquilo que ajuda a contar um pouco mais sobre a relação dele com o carro."
+        "Um Polo GTS que virou projeto, laboratório e, principalmente, uma história sobre paixão por carros. O @blu_gts_br reúne preparação, modificações, manutenção, experiências na rua e na oficina e tudo aquilo que acontece quando o dono resolve ir além do original. Mais do que mostrar um carro pronto, o projeto acompanha o processo, os acertos, os erros e as histórias que vêm junto."
     },
 
     links: [
       {
         label: "Instagram",
-        url: "#"
+        url: "https://www.instagram.com/gui_varela_11/"
       },
       {
-        label: "Projeto",
-        url: "#"
+        label: "Blu GTS",
+        url: "https://www.instagram.com/blu_gts_br/"
       }
     ]
   },
